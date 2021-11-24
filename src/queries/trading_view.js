@@ -1,3 +1,4 @@
+import { INTERVAL } from './interval'
 export const getTradingViewData = async () => {
 	let ds = new window.dataSourceWidget(`
    query(
@@ -44,7 +45,7 @@ export const getTradingViewData = async () => {
    }
  `, {
 		"from": "2021-10-18T00:00:00",
-		"interval": 30,
+		"interval": INTERVAL,
 		"baseAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
 		"quoteAddress": "0x8b3192f5eebd8579568a2ed41e6feb402f93f73f",
 		"protocol": "Uniswap v2",
