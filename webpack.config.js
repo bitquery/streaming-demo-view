@@ -28,6 +28,14 @@ module.exports = {
 				],
 			},
 			{
+				test: /\.css$/i,
+				use: [
+					"style-loader",
+					"css-loader",
+					"sass-loader",
+				],
+			},
+			{
 				test: /\.m?js$/,
 				include: path.resolve(__dirname, 'src'),
 				exclude: /(node_modules|bower_components)/,

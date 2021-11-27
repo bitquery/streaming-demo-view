@@ -37,6 +37,7 @@
     "regenerator-runtime": "^0.13.9",
     "sockjs-client": "^1.5.2",
     "stompjs": "^2.3.3",
+    "table-widget": "^1.0.1",
     "tabulator-tables": "^4.9.3"
   }
 }

@@ -14,13 +14,6 @@ export default async function tradingViewrenderer(chart, ds, config, el, update)
 	} else {
 		values = ds.values
 	}
-	/* const chart = createChart(el, {
-		timeScale: {
-			timeVisible: true,
-			secondsVisible: false,
-		}
-	})
-	const candlestickSeries = chart.addCandlestickSeries() */
 	const data = []
 	for (let i = 0; i < values.length; i++) {
 		let trade = {

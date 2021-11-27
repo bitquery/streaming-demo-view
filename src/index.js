@@ -4,6 +4,7 @@ import * as SockJS from 'sockjs-client'
 import Stomp from "stompjs"
 import "./style.scss"
 import tradingViewrenderer from './tradingViewRenderer';
+import tableWidgetRenderer from 'table-widget/src/components/tableWidgetRenderer.js'
 import { getTradingViewData } from './queries/trading_view'
 import { getUnixTime } from './utils/utils'
 import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development.js'
@@ -12,11 +13,56 @@ import { INTERVAL } from './queries/interval'
 const SUBSCRIPTIONS = {
 	lastTrades: 'sub-91b1b654e79868f39c8ed58f8525d69a65caf7f5'
 }
+const tableConfig = {
+    "height": "100%",
+    "layout": "fitData",
+    "columns": [
+        {
+            "field": "block.timestamp.time",
+            "title": "Timestamp"
+        },
+        {
+            "field": "block.height",
+            "title": "Block"
+        },
+        {
+            "field": "baseAmount",
+            "title": "Base amount"
+        },
+        {
+            "field": "baseCurrency.symbol",
+            "title": "Base currency"
+        },
+        {
+            "field": "quoteAmount",
+            "title": "Quote amount"
+        },
+        {
+            "field": "quoteCurrency.symbol",
+            "title": "Quote currency"
+        },
+        {
+            "field": "protocol",
+            "title": "Protocol"
+        },
+        {
+            "field": "exchange.fullName",
+            "title": "Exchange"
+        },
+        {
+            "field": "smartContract.address.address",
+            "title": "Smart contract"
+        },
+        {
+            "field": "transaction.hash",
+            "title": "Hash"
+        }
+    ],
+}
 
 const updateCandle = (trade, candle) => {
 	if (trade.quotePrice > candle.high) candle.high = trade.quotePrice
 	if (trade.quotePrice < candle.low) candle.low = trade.quotePrice
-	// candle.close = trade.quotePrice
 }
 
 async function domagic() {
@@ -26,6 +72,7 @@ async function domagic() {
 			secondsVisible: false,
 		}
 	})
+	let table = null
 	const candleChart = chart.addCandlestickSeries()
 	const values = await getTradingViewData()
 	let lastTimeInterval = values[values.length-1].timeInterval.minute
@@ -34,13 +81,21 @@ async function domagic() {
 	const includeNextCandle = timestamp => getUnixTime(timestamp) >= getUnixTime(nextTimeInterval)
 	console.log(values)
 	tradingViewrenderer(candleChart, { values }, {}, 'realtimetradingview', false)
+	document.getElementById('realtimetable').style.height = '500px'
 	let stompClient = null
 	var socket = new SockJS('http://strm-etl-1.ph158.system.local:8080/stomp');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function (frame) {
 		console.log('Connected: ' + frame);
 		stompClient.subscribe(SUBSCRIPTIONS.lastTrades, function (update) {
+			console.log('table is ', table)
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
+			if (table) {
+				console.log(table)
+				tableWidgetRenderer(table, {values: data}, tableConfig, 'realtimetable', true)	
+			} else {
+				tableWidgetRenderer(undefined , {values: data}, tableConfig, 'realtimetable', false).then(response => table = response)
+			}
 			console.log(data[0].block.timestamp.time, data[0].quotePrice)
 			let lastCandle = values[values.length - 1]
 			let nextCandle = {
@@ -70,7 +125,7 @@ async function domagic() {
 						tradingViewrenderer(candleChart, {values: [nextCandle]}, {}, 'realtimetradingview', true)
 						values.push(nextCandle)
 					}
-					if (includeLastCandle(data[i+1].block.timestamp.time)) {
+					if (includeLastCandle(data[i+1] && data[i+1].block.timestamp.time)) {
 						nextCandle.open = data[i].quotePrice
 						nextCandle.high = data[i].quotePrice
 						nextCandle.low = data[i].quotePrice
