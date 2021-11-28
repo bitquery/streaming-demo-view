@@ -1,4 +1,5 @@
 import { INTERVAL } from './interval'
+import { CURRENCIES } from './currencies'
 export const getTradingViewData = async () => {
 	let ds = new window.dataSourceWidget(`
    query(
@@ -46,11 +47,11 @@ export const getTradingViewData = async () => {
  `, {
 		"from": "2021-10-18T00:00:00",
 		"interval": INTERVAL,
-		"baseAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-		"quoteAddress": "0x8b3192f5eebd8579568a2ed41e6feb402f93f73f",
+		"baseAddress": CURRENCIES.WETH,
+		"quoteAddress": CURRENCIES.USDC,
 		"protocol": "Uniswap v2",
 		"exchangeName": "Uniswap"
-	}, `ethereum.dexTrades`, 'BQY6TU7z5qlHcPYngQKPOZ0eOmhNnnBn')
+	}, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
 	const data = await ds.fetcher()
 	const json = await data.json()
 	return ds.setupData(json)

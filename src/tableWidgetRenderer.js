@@ -1,6 +1,6 @@
 import Tabulator from "tabulator-tables"; 
 import "../index.css"
-import { formatter } from "../utils/formatter.js";
+import { formatter } from "./utils/formatter.js";
 
 export default async function tableWidgetRenderer(table, ds, config, el, update) {
 	let values = undefined
@@ -21,7 +21,7 @@ export default async function tableWidgetRenderer(table, ds, config, el, update)
 		data: values,
 	}
 	if (update) {
-		table.updateOrAddData(values)
+		table.addData(values, true)
 	} else {
 		try {
 			if (el) {

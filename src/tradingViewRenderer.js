@@ -1,11 +1,4 @@
-// import { createChart } from 'lightweight-charts'
-// import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development.js'
-// import elementResizeEvent from 'element-resize-event'
-
 export default async function tradingViewrenderer(chart, ds, config, el, update) {
-	console.log(ds)
-	// const thisTV = document.getElementById(el).firstChild
-	// thisTV && document.getElementById(el).removeChild(thisTV)
 	let values = undefined
 	if (!ds.values) {
 		const data = await ds.fetcher()
@@ -26,20 +19,13 @@ export default async function tradingViewrenderer(chart, ds, config, el, update)
 		data.push(trade)
 	}
 	if (update) {
-		console.log(data[0])
-		chart.update(data[0])
+		try {
+			chart.update(data[0])
+		} catch (error) {
+			console.log(error)
+		}
 	} else {
 		chart.setData(data)
 	}
-	// chart.setData(data)
-	/* function reportWindowSize() {
-		chart.applyOptions({
-			width: document.getElementById(el).clientWidth,
-			height: document.getElementById(el).clientHeight
-		});
-	}
-	let element = document.getElementById(el).parentNode
-	elementResizeEvent(element, function() {
-		reportWindowSize() 
-	})*/
+	
 }
