@@ -1,6 +1,8 @@
 import { INTERVAL } from './interval'
 import { CURRENCIES } from './currencies'
 export const getTradingViewData = async () => {
+	const baseAddress = window.location.pathname.split('/')[1]
+	const quoteAddress = window.location.pathname.split('/')[2]
 	let ds = new window.dataSourceWidget(`
    query(
 	 $baseAddress: String
@@ -47,8 +49,8 @@ export const getTradingViewData = async () => {
  `, {
 		"from": "2021-10-18T00:00:00",
 		"interval": INTERVAL,
-		"baseAddress": CURRENCIES.WETH,
-		"quoteAddress": CURRENCIES.USDC,
+		"baseAddress": baseAddress.startsWith('0x') ? baseAddress : CURRENCIES.WETH,
+		"quoteAddress": quoteAddress.startsWith('0x') ? quoteAddress : CURRENCIES.USDC,
 		"protocol": "Uniswap v2",
 		"exchangeName": "Uniswap"
 	}, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')

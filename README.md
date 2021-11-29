@@ -1,3 +1,4 @@
+### `npm install`
 ### `npm run build` 
 then
 ### `npm run start`

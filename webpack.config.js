@@ -14,7 +14,13 @@ module.exports = {
 	},
 	devtool: 'inline-source-map',
 	devServer: {
-		static: './dist',
+		historyApiFallback: {
+			index: '/address/second'
+		},
+		static: {
+			directory: './dist',
+			publicPath: '/address/second',
+		},
 		hot: true
 	},
 	module: {

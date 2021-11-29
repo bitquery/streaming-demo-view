@@ -1,17 +1,16 @@
 import { CURRENCIES } from './currencies'
-export const getLastTradesData = async () => {
+export const getSubscriptionId = async () => {
 	const baseAddress = window.location.pathname.split('/')[1]
 	const quoteAddress = window.location.pathname.split('/')[2]
 	let ds = new window.dataSourceWidget(`
-	query (
-		$network: EthereumNetwork!
-		$limit: Int!
-		$offset: Int!
-		$from: ISO8601DateTime
-		$till: ISO8601DateTime
-		$baseAddress: String
-		$quoteAddress: String
-	) {
+	subscription (
+			$network: EthereumNetwork!
+			$limit: Int!, $offset: Int!
+			$from: ISO8601DateTime
+			$till: ISO8601DateTime
+			$baseAddress: String
+			$quoteAddress: String
+		) {
 		ethereum(network: $network) {
 		  dexTrades(
 			options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
@@ -55,16 +54,16 @@ export const getLastTradesData = async () => {
 	  }
 	  
  `, {
-	"limit": 10,
-	"offset": 0,
-	"network": "ethereum",
-	"baseAddress": baseAddress.startsWith('0x') ? baseAddress : CURRENCIES.WETH,
-	"quoteAddress": quoteAddress.startsWith('0x') ? quoteAddress : CURRENCIES.USDC,
-	"from": "2021-11-16",
-	"till": null,
-	"dateFormat": "%Y-%m-%d"
-}, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
+		"limit": 10,
+		"offset": 0,
+		"network": "ethereum",
+		"baseAddress": baseAddress.startsWith('0x') ? baseAddress : CURRENCIES.WETH,
+		"quoteAddress": quoteAddress.startsWith('0x') ? quoteAddress : CURRENCIES.USDC,
+		"from": "2021-11-16",
+		"till": null,
+		"dateFormat": "%Y-%m-%d"
+  }, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
 	const data = await ds.fetcher()
 	const json = await data.json()
-	return ds.setupData(json)
+	return json.extensions.subId
 }

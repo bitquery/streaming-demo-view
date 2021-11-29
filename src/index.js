@@ -7,14 +7,12 @@ import tradingViewrenderer from './tradingViewRenderer';
 import tableWidgetRenderer from './tableWidgetRenderer.js'
 import { getTradingViewData } from './queries/trading_view'
 import { getLastTradesData } from "./queries/last_trades";
+import { getSubscriptionId } from "./queries/subscription";
 import { getUnixTime } from './utils/utils'
 import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development.js'
 import { INTERVAL } from './queries/interval'
+import { CURRENCIES } from "./queries/currencies";
 
-const SUBSCRIPTIONS = {
-	// lastTrades: 'sub-f220f8980ab54c1a01b5dbb4df9a46a7d6f37fbb'	// WETH/SAITAMA
-	lastTrades: 'sub-b60e9af12ca2f21bb04482326bf0776410024082'	// WETH/USDC
-}
 const tableConfig = {
     "height": "100%",
     "layout": "fitData",
@@ -61,13 +59,15 @@ const tableConfig = {
         }
     ],
 }
-
 const updateCandle = (trade, candle) => {
 	if (trade.quotePrice > candle.high) candle.high = trade.quotePrice
 	if (trade.quotePrice < candle.low) candle.low = trade.quotePrice
 }
 
 async function domagic() {
+	if (window.location.pathname === '/') {
+		window.location.pathname = `/${CURRENCIES.WETH}/${CURRENCIES.USDC}`
+	}
 	const chart = createChart('realtimetradingview', {
 		timeScale: {
 			timeVisible: true,
@@ -76,7 +76,7 @@ async function domagic() {
 	})
 	let table = null
 	const candleChart = chart.addCandlestickSeries()
-	const [values, valuesLT] = await Promise.all([ getTradingViewData(), getLastTradesData() ])
+	const [values, valuesLT, subID] = await Promise.all([ getTradingViewData(), getLastTradesData(), getSubscriptionId() ])
 	tableWidgetRenderer(undefined , { values: valuesLT }, tableConfig, 'realtimetable', false).then(response => table = response)
 	let lastTimeInterval = values[values.length-1].timeInterval.minute
 	let nextTimeInterval = new Date ( (getUnixTime( values[values.length-1].timeInterval.minute )+ INTERVAL*60) * 1000 ).toISOString()
@@ -88,7 +88,7 @@ async function domagic() {
 	var socket = new SockJS('http://streaming.bitquery.io:8080/stomp');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function (frame) {
-		stompClient.subscribe(SUBSCRIPTIONS.lastTrades, function (update) {
+		stompClient.subscribe(subID, function (update) {
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
 			if (table) {
 				tableWidgetRenderer(table, {values: data}, tableConfig, 'realtimetable', true)	
