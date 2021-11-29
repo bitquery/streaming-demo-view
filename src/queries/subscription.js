@@ -5,18 +5,16 @@ export const getSubscriptionId = async () => {
 	let ds = new window.dataSourceWidget(`
 	subscription (
 			$network: EthereumNetwork!
-			$limit: Int!, $offset: Int!
 			$from: ISO8601DateTime
-			$till: ISO8601DateTime
 			$baseAddress: String
 			$quoteAddress: String
 		) {
 		ethereum(network: $network) {
 		  dexTrades(
-			options: {desc: ["block.height", "tradeIndex"], limit: $limit, offset: $offset}
+			options: {desc: ["block.height", "tradeIndex"]}
 			baseCurrency: {is: $baseAddress}
 			quoteCurrency: {is: $quoteAddress}
-			date: {since: $from, till: $till}
+			time: {since: $from}
 		  ) {
 			block {
 			  timestamp {
@@ -54,14 +52,10 @@ export const getSubscriptionId = async () => {
 	  }
 	  
  `, {
-		"limit": 10,
-		"offset": 0,
 		"network": "ethereum",
 		"baseAddress": baseAddress.startsWith('0x') ? baseAddress : CURRENCIES.WETH,
 		"quoteAddress": quoteAddress.startsWith('0x') ? quoteAddress : CURRENCIES.USDC,
-		"from": "2021-11-16",
-		"till": null,
-		"dateFormat": "%Y-%m-%d"
+		"from": (new Date()).toISOString()
   }, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
 	const data = await ds.fetcher()
 	const json = await data.json()
