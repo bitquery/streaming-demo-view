@@ -126,7 +126,7 @@ async function domagic() {
 	tradingViewrenderer(candleChart, { values }, {}, 'realtimetradingview', false)
 	document.getElementById('realtimetable').style.height = '500px'
 	let stompClient = null
-	var socket = new SockJS('http://streaming.bitquery.io:8080/stomp');
+	var socket = new SockJS('https://streaming.bitquery.io/stomp');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function (frame) {
 		stompClient.subscribe(subID, function (update) {
