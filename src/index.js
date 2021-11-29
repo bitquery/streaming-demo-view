@@ -62,11 +62,54 @@ const updateCandle = (trade, candle) => {
 	if (trade.quotePrice > candle.high) candle.high = trade.quotePrice
 	if (trade.quotePrice < candle.low) candle.low = trade.quotePrice
 }
+const timeSinceLastBlockProcessed = () => {
+	let timeBegan = null
+    , timeStopped = null
+    , stoppedDuration = 0
+    , started = null;
 
+	function start() {
+		if (timeBegan === null) {
+			timeBegan = new Date();
+		}
+		if (timeStopped !== null) {
+			stoppedDuration += (new Date() - timeStopped);
+		}
+		started = setInterval(clockRunning, 10);	
+	}
+	function restart() {
+		clearInterval(started);
+		stoppedDuration = 0;
+		timeBegan = null;
+		timeStopped = null;
+		document.getElementById("block-time-ago").innerHTML = "00.000";
+		start()
+	}
+	function clockRunning(){
+		var currentTime = new Date()
+			, timeElapsed = new Date(currentTime - timeBegan - stoppedDuration)
+			, min = timeElapsed.getUTCMinutes()
+			, sec = timeElapsed.getUTCSeconds()
+			, ms = timeElapsed.getUTCMilliseconds();
+	
+		document.getElementById("block-time-ago").innerHTML = 
+			(min > 9 ? min : "0" + min) + ":" + 
+			(sec > 9 ? sec : "0" + sec) + "." + 
+			(ms > 99 ? ms : ms > 9 ? "0" + ms : "00" + ms);
+	};
+	return restart
+}
 async function domagic() {
+	const restart = timeSinceLastBlockProcessed()
 	if (window.location.pathname === '/') {
 		window.location.pathname = `/${CURRENCIES.WETH}/${CURRENCIES.USDC}`
 	}
+	const baseAddress = document.createTextNode(window.location.pathname.split('/')[1].startsWith('0x') ? 
+		window.location.pathname.split('/')[1] : CURRENCIES.WETH)
+	const quoteAddress = document.createTextNode(window.location.pathname.split('/')[2].startsWith('0x') ? 
+		window.location.pathname.split('/')[2] : CURRENCIES.USDC)
+	document.getElementById('basecurrency').appendChild(baseAddress)
+	document.getElementById('quotecurrency').appendChild(quoteAddress)
 	const chart = createChart('realtimetradingview', {
 		timeScale: {
 			timeVisible: true,
@@ -87,7 +130,11 @@ async function domagic() {
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function (frame) {
 		stompClient.subscribe(subID, function (update) {
+			console.log('update')
+			restart()
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
+			document.getElementById('block-height').innerHTML = data[0].block.height
+			document.getElementById('last-block-delay').innerHTML = getUnixTime(new Date()) - getUnixTime(data[0].block.timestamp.time)
 			if (table) {
 				tableWidgetRenderer(table, {values: data}, tableConfig, 'realtimetable', true)	
 			} else {
