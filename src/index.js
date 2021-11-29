@@ -130,7 +130,6 @@ async function domagic() {
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function (frame) {
 		stompClient.subscribe(subID, function (update) {
-			console.log('update')
 			restart()
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
 			document.getElementById('block-height').innerHTML = data[0].block.height
