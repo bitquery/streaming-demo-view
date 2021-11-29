@@ -6,7 +6,6 @@ import "./style.scss"
 import tradingViewrenderer from './tradingViewRenderer';
 import tableWidgetRenderer from './tableWidgetRenderer.js'
 import { getTradingViewData } from './queries/trading_view'
-import { getLastTradesData } from "./queries/last_trades";
 import { getSubscriptionId } from "./queries/subscription";
 import { getUnixTime } from './utils/utils'
 import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development.js'
@@ -76,8 +75,7 @@ async function domagic() {
 	})
 	let table = null
 	const candleChart = chart.addCandlestickSeries()
-	const [values, valuesLT, subID] = await Promise.all([ getTradingViewData(), getLastTradesData(), getSubscriptionId() ])
-	tableWidgetRenderer(undefined , { values: valuesLT }, tableConfig, 'realtimetable', false).then(response => table = response)
+	const [values, subID] = await Promise.all([ getTradingViewData(), getSubscriptionId() ])
 	let lastTimeInterval = values[values.length-1].timeInterval.minute
 	let nextTimeInterval = new Date ( (getUnixTime( values[values.length-1].timeInterval.minute )+ INTERVAL*60) * 1000 ).toISOString()
 	const includeLastCandle = timestamp => getUnixTime(lastTimeInterval) >= getUnixTime(timestamp) < getUnixTime(nextTimeInterval)
@@ -92,6 +90,8 @@ async function domagic() {
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
 			if (table) {
 				tableWidgetRenderer(table, {values: data}, tableConfig, 'realtimetable', true)	
+			} else {
+				tableWidgetRenderer(undefined , {values: data}, tableConfig, 'realtimetable', false).then(response => table = response)
 			}
 			let lastCandle = values[values.length - 1]
 			let nextCandle = {
