@@ -7,6 +7,7 @@ import tradingViewrenderer from './tradingViewRenderer';
 import tableWidgetRenderer from './tableWidgetRenderer.js'
 import { getTradingViewData } from './queries/trading_view'
 import { getSubscriptionId } from "./queries/subscription";
+import { getLastBlockSubscriptionId } from "./queries/last_block";
 import { getUnixTime } from './utils/utils'
 import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development.js'
 import { INTERVAL } from './queries/interval'
@@ -118,7 +119,7 @@ async function domagic() {
 	})
 	let table = null
 	const candleChart = chart.addCandlestickSeries()
-	const [values, subID] = await Promise.all([ getTradingViewData(), getSubscriptionId() ])
+	const [values, subID, lastBlockSubID] = await Promise.all([ getTradingViewData(), getSubscriptionId(), getLastBlockSubscriptionId() ])
 	let lastTimeInterval = values[values.length-1].timeInterval.minute
 	let nextTimeInterval = new Date ( (getUnixTime( values[values.length-1].timeInterval.minute )+ INTERVAL*60) * 1000 ).toISOString()
 	const includeLastCandle = timestamp => getUnixTime(lastTimeInterval) >= getUnixTime(timestamp) < getUnixTime(nextTimeInterval)
@@ -129,11 +130,14 @@ async function domagic() {
 	var socket = new SockJS('https://streaming.bitquery.io/stomp');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function (frame) {
-		stompClient.subscribe(subID, function (update) {
+		stompClient.subscribe(lastBlockSubID, function (update) {
 			restart()
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
 			document.getElementById('block-height').innerHTML = data[0].block.height
 			document.getElementById('last-block-delay').innerHTML = getUnixTime(new Date()) - getUnixTime(data[0].block.timestamp.time)
+		})
+		stompClient.subscribe(subID, function (update) {
+			let data = JSON.parse(update.body).data.ethereum.dexTrades
 			if (table) {
 				tableWidgetRenderer(table, {values: data}, tableConfig, 'realtimetable', true)	
 			} else {
