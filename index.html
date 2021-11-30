@@ -10,28 +10,26 @@
 	<meta name="description" content="Project demonstrate using web sockets to get latest DEX data from bitquery.io. Refer to https://github.com/bitquery/streaming-demo-view for details">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
 	<div class="container">
-		<a class="navbar-brand" href="/"><img src="/src/assets/images/bitquery_logo.png" style="width: auto; height: 40px"> &nbsp;&nbsp;&nbsp; DEX Realtime Feed Demo Project</a>
-		<div class="navbar-nav">
-			<a class="nav-link" href="https://bitquery.io">Bitquery.io</a>
-		</div>
+		<a class="navbar-logo" href="https://bitquery.io"><img src="/src/assets/images/bitquery_logo.png" style="width: auto; height: 40px"></a>
+		<a class="navbar-brand" style="margin-right: 0" href="/">DEX Realtime Feed Demo Project</a>
 	</div>
 </nav>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<div class="card text-white bg-dark mb-2">
+				<div class="card text-white bg-dark mb-3">
 					<div class="card-body">
-						<h5 class="card-title">Base Currency</h5>
+						<strong>Base Currency</strong>
 						<p class="card-text" id="basecurrency"></p>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="card text-white bg-dark mb-2">
+				<div class="card text-white bg-dark mb-3">
 					<div class="card-body">
-						<h5 class="card-title">Quote Currency</h5>
+						<strong>Quote Currency</strong>
 						<p class="card-text" id="quotecurrency"></p>
 					</div>
 				</div>
@@ -39,26 +37,26 @@
 		</div>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="card text-white bg-success mb-2">
+				<div class="card text-white bg-success mb-3">
 					<div class="card-body">
-						<h5 class="card-title">Last Block</h5>
-						<h4 id="block-height">Waiting...</h4>
+						<strong>Last Block</strong>
+						<p class="card-text" id="block-height">Waiting...</p>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="card text-white bg-success mb-2">
+				<div class="card text-white bg-success mb-3">
 					<div class="card-body">
-						<h5 class="card-title">Last Block Trading, sec ago</h5>
-						<h4 id="block-time-ago">Waiting...</h4>
+						<strong>Last Block Trading, sec ago</strong>
+						<p class="card-text" id="block-time-ago">Waiting...</p>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="card text-white bg-success mb-2">
+				<div class="card text-white bg-success mb-3">
 					<div class="card-body">
-						<h5 class="card-title">Block Time, sec ago</h5>
-						<h4><span id="last-block-delay">Waiting...</span></h4>
+						<strong>Block Time, sec ago</strong>
+						<p class="card-text"><span id="last-block-delay">Waiting...</span></>
 					</div>
 				</div>
 			</div>
@@ -89,5 +87,10 @@
 		</div>
 	</div>
 	<script src="index.js"></script>
+	<style>
+		.card-body{
+			padding: 0.3rem 0.5rem;
+		}
+	</style>
 </body>
 </html>
