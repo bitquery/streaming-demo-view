@@ -13,7 +13,7 @@ export const getLastBlockSubscriptionId = async () => {
 		}
 	  }
  `, {
-		"network": "ethereum",
+		"network": "bsc",
 		"from": (new Date()).toISOString()
 	}, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
 	const data = await ds.fetcher()

@@ -1,5 +1,4 @@
 import { INTERVAL } from './interval'
-import { CURRENCIES } from './currencies'
 export const getTradingViewData = async () => {
 	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
 	const baseAddress = currs[0]
@@ -10,16 +9,12 @@ export const getTradingViewData = async () => {
 	 $quoteAddress: String
 	 $from: ISO8601DateTime!
 	 $interval: Int
-	 $protocol: String
-	 $exchangeName: String
    ) {
-	 ethereum(network: ethereum) {
+	 ethereum(network: bsc) {
 	   dexTrades(
-		 protocol: { is: $protocol }
 		 baseCurrency: { is: $baseAddress }
 		 quoteCurrency: { is: $quoteAddress }
 		 time: { since:  $from }
-		 exchangeName: { is: $exchangeName }
 		 priceAsymmetry: { lt: 0.7 }
 		 any: [
 		   {tradeAmountUsd: { gt: 0.00001 }},
@@ -50,10 +45,8 @@ export const getTradingViewData = async () => {
  `, {
 		"from": "2021-10-18T00:00:00",
 		"interval": INTERVAL,
-		"baseAddress": baseAddress.startsWith('0x') ? baseAddress : CURRENCIES.WETH,
-		"quoteAddress": quoteAddress.startsWith('0x') ? quoteAddress : CURRENCIES.USDC,
-		"protocol": "Uniswap v2",
-		"exchangeName": "Uniswap"
+		"baseAddress": baseAddress,
+		"quoteAddress": quoteAddress,
 	}, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
 	const data = await ds.fetcher()
 	const json = await data.json()

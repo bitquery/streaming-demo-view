@@ -103,8 +103,8 @@ const timeSinceLastBlockProcessed = () => {
 async function domagic() {
 	const restart = timeSinceLastBlockProcessed()
 	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
-	const baseAddress = (currs && currs.length === 2) ? currs[0] : CURRENCIES.WETH
-	const quoteAddress = (currs && currs.length === 2) ? currs[1] : CURRENCIES.USDC
+	const baseAddress = (currs && currs.length === 2) ? currs[0] : CURRENCIES.BUSD
+	const quoteAddress = (currs && currs.length === 2) ? currs[1] : CURRENCIES.WBNB
 	if (!(currs && currs.length === 2)) window.location.pathname = `${window.location.pathname}/${baseAddress}/${quoteAddress}`
 	document.getElementById('basecurrency').appendChild(document.createTextNode(baseAddress))
 	document.getElementById('quotecurrency').appendChild(document.createTextNode(quoteAddress))

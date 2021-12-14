@@ -9,7 +9,7 @@ module.exports = {
 	output: {
 		filename: '[name].js',
 		path: path.resolve(__dirname, 'dist'),
-		publicPath: '/trades',
+		publicPath: '/bsctrades',
 		clean: true,
 	},
 	devtool: 'inline-source-map',

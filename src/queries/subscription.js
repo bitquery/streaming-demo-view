@@ -1,4 +1,3 @@
-import { CURRENCIES } from './currencies'
 export const getSubscriptionId = async () => {
 	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
 	const baseAddress = currs[0]
@@ -53,9 +52,9 @@ export const getSubscriptionId = async () => {
 	  }
 	  
  `, {
-		"network": "ethereum",
-		"baseAddress": baseAddress.startsWith('0x') ? baseAddress : CURRENCIES.WETH,
-		"quoteAddress": quoteAddress.startsWith('0x') ? quoteAddress : CURRENCIES.USDC,
+		"network": "bsc",
+		"baseAddress": baseAddress,
+		"quoteAddress": quoteAddress,
 		"from": (new Date()).toISOString()
   }, `ethereum.dexTrades`, 'BQYuq0a8yHb2oa6bDx9R3GO2LNWAtR2q')
 	const data = await ds.fetcher()
