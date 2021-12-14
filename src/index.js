@@ -102,10 +102,10 @@ const timeSinceLastBlockProcessed = () => {
 }
 async function domagic() {
 	const restart = timeSinceLastBlockProcessed()
-	let currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
+	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
 	const baseAddress = (currs && currs.length === 2) ? currs[0] : CURRENCIES.WETH
 	const quoteAddress = (currs && currs.length === 2) ? currs[1] : CURRENCIES.USDC
-	if (!(currs && currs.length === 2)) window.location.pathname = `/${baseAddress}/${quoteAddress}`
+	if (!(currs && currs.length === 2)) window.location.pathname = `${window.location.pathname}/${baseAddress}/${quoteAddress}`
 	document.getElementById('basecurrency').appendChild(document.createTextNode(baseAddress))
 	document.getElementById('quotecurrency').appendChild(document.createTextNode(quoteAddress))
 	const chart = createChart('realtimetradingview', {
@@ -126,7 +126,8 @@ async function domagic() {
 	let stompClient = null
 	var socket = new SockJS('https://streaming.bitquery.io/stomp');
 	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function (frame) {
+	stompClient.reconnect = 5000
+	const successCB = function (frame) {
 		stompClient.subscribe(lastBlockSubID, function (update) {
 			restart()
 			let data = JSON.parse(update.body).data.ethereum.dexTrades
@@ -175,7 +176,14 @@ async function domagic() {
 			}
 			nextCandle = {}
 		})
-	})
+	}
+	const errorCB = function() {
+		console.log('STOMP: Attempting connection')
+		stompClient = Stomp.over(socket)
+		stompClient.reconnect = 5000
+		stompClient.connect({}, successCB, errorCB)
+	}
+	stompClient.connect({}, successCB, errorCB)
 }	
 
 window.onload = domagic
