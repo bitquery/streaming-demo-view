@@ -1,8 +1,8 @@
 import { INTERVAL } from './interval'
 export const getTradingViewData = async () => {
 	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
-	const baseAddress = currs[0]
-	const quoteAddress = currs[1]
+	const baseAddress = currs ? currs[0] : CURRENCIES.USDC
+	const quoteAddress = currs ? currs[1] : CURRENCIES.WETH
 	let ds = new window.dataSourceWidget(`
    query(
 	 $baseAddress: String
