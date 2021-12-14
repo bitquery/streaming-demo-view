@@ -77,11 +77,11 @@ Copy content of `dist/` folder to `(your nginx docroot)/bsctrades`
         #.
         #.
         location / {
-            root /opt/homebrew/var/www;
+            root $(replace docroot e.g. /nginx/var/www);
             index index.html;
         }
         location /trades {
-            root /opt/homebrew/var/www;
+            root $(reaplce docroot);
             try_files $uri &uri/ &uri/index.html /trades/index.html;
             add_header Last-Modified $date_gmt;
             add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
@@ -90,7 +90,7 @@ Copy content of `dist/` folder to `(your nginx docroot)/bsctrades`
             etag off;
         }
         location /bsctrades {
-            root /opt/homebrew/var/www;
+            root $(repalce docroot);
             try_files $uri &uri/ &uri/index.html /bsctrades/index.html;
             add_header Last-Modified $date_gmt;
             add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
