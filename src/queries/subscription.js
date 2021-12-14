@@ -1,3 +1,5 @@
+import { CURRENCIES } from "./currencies"
+
 export const getSubscriptionId = async () => {
 	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
 	const baseAddress = currs ? currs[0] : CURRENCIES.USDC
