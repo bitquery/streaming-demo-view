@@ -2,8 +2,8 @@ import { CURRENCIES } from "./currencies"
 
 export const getSubscriptionId = async () => {
 	const currs = window.location.pathname.match(/0x[a-fA-F0-9]{40}/g)
-	const baseAddress = currs ? currs[0] : CURRENCIES.BUSD
-	const quoteAddress = currs ? currs[1] : CURRENCIES.WBNB
+	const baseAddress = currs ? currs[0] : CURRENCIES.WBNB
+	const quoteAddress = currs ? currs[1] : CURRENCIES.BUSD
 	let ds = new window.dataSourceWidget(`
 	subscription (
 			$network: EthereumNetwork!
