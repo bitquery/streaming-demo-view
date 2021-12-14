@@ -64,3 +64,44 @@ and
 USDC (0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48) 
 
 as a default topken pair. 
+
+## Deploy
+
+Copy content of `dist/` folder to `(your nginx docroot)/bsctrades`
+
+### nginx.conf
+```
+    #.
+    #.
+    server {
+        #.
+        #.
+        location / {
+            root /opt/homebrew/var/www;
+            index index.html;
+        }
+        location /trades {
+            root /opt/homebrew/var/www;
+            try_files $uri &uri/ &uri/index.html /trades/index.html;
+            add_header Last-Modified $date_gmt;
+            add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            if_modified_since off;
+            expires off;
+            etag off;
+        }
+        location /bsctrades {
+            root /opt/homebrew/var/www;
+            try_files $uri &uri/ &uri/index.html /bsctrades/index.html;
+            add_header Last-Modified $date_gmt;
+            add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            if_modified_since off;
+            expires off;
+            etag off;
+        }
+        #.
+        #.
+    }
+    #.
+    #.
+```
+
