@@ -1,0 +1,118 @@
+@keyframes popup {
+	0% {
+		bottom: -10%;
+		opacity: 1;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		bottom: 100%;
+		opacity: 0;
+	}
+}
+#app {
+	font-family: 'swiss921-bt-regular', sans-serif;
+	background-color: #000;
+	color: #ececec;
+	font-size: 1.5vmax;
+	display: flex;
+	width: 100vw;
+	height: 100vh;
+	position: relative;
+	.logo {
+		position: absolute;
+		top: 50px;
+		right: 7vmax;
+		height: 50px;
+	}
+	.container {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 33%;
+		height: 100%;
+		&__left {
+			position: relative;
+			.item {
+				display: flex;
+				padding-left: 7vmax;
+				&.number {
+					padding-top: 50px;
+					flex: 0 1 20%;
+				}
+				&.plug {
+					position: relative;
+					flex-direction: column;
+					flex: 0 1 80%;
+					justify-content: flex-end;
+				}
+				&.trades {
+					position: absolute;
+					flex-direction: column;
+					justify-content: flex-end;
+					bottom: 0;
+					left: 0;
+					height: 80vh;
+					width: 50vw;
+					font-size: 26px;
+					opacity: .8;
+					.trade {
+						bottom: -10%;
+						position: absolute;
+						animation: popup 5s ease-in-out;
+						animation-iteration-count: 1;
+					}
+				}
+			}
+		}
+		&__middle {
+			justify-content: center;
+			align-items: center;
+			.token-price-exchange{
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
+				margin: auto;
+				.token {
+					font-size: 1vmax;
+				}
+				.price {
+					font-size: 10vmax;
+					font-weight: bold;
+				}
+				.exchange {
+					font-weight: bold;
+					margin-top: -2vmax;
+				}
+			}
+			.datetime {
+				padding-bottom: 50px;
+			}
+		}
+		&__right {
+			position: relative;
+			justify-content: flex-end;
+			align-items: center;
+			/* .online {
+				position: absolute;
+				border-radius: 50%;
+				background-color: greenyellow;
+				width: 50px;
+				height: 50px;
+				top: 50px;
+				right: 50px;
+			} */
+			// image {
+			// 	position: absolute;
+			// 	top: 50px;
+			// 	right: 50px;
+			// }
+			.fastest-system {
+				display: flex;
+				padding-bottom: 50px;
+			}
+		}
+	}
+}
