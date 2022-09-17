@@ -9,7 +9,7 @@ setInterval(() => document.getElementById("datetime").innerHTML = new Date().toL
 }), 1)
 
 const client = createClient({
-	url: 'ws://streaming.bitquery.io/graphql'
+	url: 'wss://streaming.bitquery.io/graphql'
 });
 
 const addNft = (url) => {
