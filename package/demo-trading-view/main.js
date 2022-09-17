@@ -70,7 +70,7 @@ async function execute(payload) {
 					address.classList.add('trades__column', 'address')
 					action.classList.add('trades__column', 'action')
 					forprice.classList.add('trades__column', 'forprice')
-					time.innerHTML = `${new Date(trade.Block.Time).toLocaleString('en-SG', { timeZone: 'Asia/Singapore', hour12: false }).match(/(?<=, ).*/gm)[0]}`
+					time.innerHTML = `${new Date(trade.Block.Time).toLocaleString('en-SG', { timeZone: 'Asia/Singapore', hour12: false }).split(', ')[1]}`
 					address.innerHTML = ` ${trade.Trade.Sell.Buyer.substring(0, 10)}...`
 					action.innerHTML = ` buy ${trade.Trade.Buy.Amount.Decimal.substring(0, 10)} ${trade.Trade.Buy.Currency.Symbol}`
 					forprice.innerHTML = ` for ${trade.Trade.Sell.Amount.Decimal.substring(0, 6)} ${trade.Trade.Sell.Currency.Symbol}`
@@ -99,7 +99,7 @@ async function execute(payload) {
 					address.classList.add('trades__column', 'address')
 					action.classList.add('trades__column', 'action')
 					forprice.classList.add('trades__column', 'forprice')
-					time.innerHTML = `${new Date(trade.Block.Time).toLocaleString('en-SG', { timeZone: 'Asia/Singapore', hour12: false }).match(/(?<=, ).*/gm)[0]}`
+					time.innerHTML = `${new Date(trade.Block.Time).toLocaleString('en-SG', { timeZone: 'Asia/Singapore', hour12: false }).split(', ')[1]}`
 					address.innerHTML = ` ${trade.Trade.Sell.Buyer.substring(0, 10)}...`
 					action.innerHTML = ` sell ${trade.Trade.Sell.Amount.Decimal.substring(0, 10)} ${trade.Trade.Sell.Currency.Symbol}`
 					forprice.innerHTML = ` for ${trade.Trade.Buy.Amount.Decimal.substring(0, 6)} ${trade.Trade.Buy.Currency.Symbol}`
