@@ -12,13 +12,16 @@ const client = createClient({
 	url: 'wss://streaming.bitquery.io/graphql'
 });
 
-const addNft = (url) => {
+const addNft = (url, name) => {
 	const nft = document.createElement('div')
 	nft.classList.add('nft')
 	nft.style.backgroundImage = `url(${url})`
 	const appearancePoint = Math.random() * window.innerWidth
 	nft.style.left = `${appearancePoint}px`
 	const app = document.getElementById('app')
+	const nftName = document.createElement('span')
+	nftName.innerHTML = name ? name : ''
+	nft.appendChild(nftName)
 	app.appendChild(nft)
 	setTimeout(() => {
 		app.removeChild(nft)
@@ -31,15 +34,15 @@ async function nft(payload) {
 		client.subscribe(payload, {
 			next: async (data) => {
 				const transfers = data.data.EVM.Transfers
-				transfers.forEach(async ({Transfer: { URI }}) => {
+				transfers.forEach(async ({Transfer: { URI, name }}) => {
 					if (URI && URI.match(/data:image/gm)) {
-						addNft(URI)
+						addNft(URI, name)
 					} else if (!URI.match(/^ipfs:\/\//gm)) {
 						try {
 							const data = await fetch(URI)
 							const json = await data.json()
 							if (json.image) {
-								addNft(json.image)
+								addNft(json.image, json.name)
 							}
 						} catch (error) {							
 						}
