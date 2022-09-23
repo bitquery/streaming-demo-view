@@ -6,24 +6,30 @@
 }
 @keyframes falling {
 	0% {
-		top: 0;
+		top: -20%;
 		opacity: 1;
 	}
 	100% {
-		top: 100%;
+		top: 120%;
 		opacity: 0;
 	}
 }
 #app {
 	.nft {
-		height: 10vmax;
-		width: 10vmax;
 		z-index: 15;
 		position: absolute;
 		background-size: cover;
-		top: 0;
-		animation: falling 10s;
 		animation-iteration-count: 1;
+		border-radius: 50%;
+		animation-timing-function: cubic-bezier(0.33333, 0, 0.66667, 0.33333);
+		span {
+			position: absolute;
+			bottom: -1.5em;
+			display: block;
+			width: 100%;
+			text-align: center;
+			text-overflow: ellipsis;
+		}
 	}
 	font-family: 'swiss921-bt-regular', sans-serif;
 	background-color: #000;
@@ -118,6 +124,7 @@
 				margin: auto;
 				.token {
 					font-size: 4vmax;
+					background: rgba(0,0,0,.5);
 				}
 				.price {
 					font-size: 10vmax;

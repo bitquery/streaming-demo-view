@@ -12,10 +12,17 @@ const client = createClient({
 	url: 'wss://streaming.bitquery.io/graphql'
 });
 
+const maxSize = 20
+
 const addNft = (url, name) => {
 	const nft = document.createElement('div')
 	nft.classList.add('nft')
 	nft.style.backgroundImage = `url(${url})`
+	const size = Math.random() * maxSize/2 + maxSize/2
+	nft.style.height = `${size}vmax`
+	nft.style.width = `${size}vmax`
+	const animationTime = maxSize/size*7 <= 1 ? 1 : 14/size*7
+	nft.style.animation = `falling ${animationTime}s`
 	const appearancePoint = Math.random() * window.innerWidth
 	nft.style.left = `${appearancePoint}px`
 	const app = document.getElementById('app')
