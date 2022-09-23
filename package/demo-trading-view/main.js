@@ -12,7 +12,7 @@ const client = createClient({
 	url: 'wss://streaming.bitquery.io/graphql'
 });
 
-const maxSize = 20
+const maxSize = 10
 
 const addNft = async (url, name) => {
 	const nft = document.createElement('div')
@@ -21,21 +21,23 @@ const addNft = async (url, name) => {
 	const imageBlob = await response.blob()
 	const imageObjectURL = URL.createObjectURL(imageBlob)
 	nft.style.backgroundImage = `url(${imageObjectURL})`
-	const size = Math.random() * maxSize/2 + maxSize/2
+	const coeff = Math.floor ( Math.random()*(100-25+1) + 25 ) / 100
+	const size = maxSize * coeff
 	nft.style.height = `${size}vmax`
 	nft.style.width = `${size}vmax`
-	const animationTime = maxSize/size*7 <= 1 ? 1 : 14/size*7
+	const animationTime = 3/coeff <= 3 ? 3 : 3/coeff
 	nft.style.animation = `falling ${animationTime}s`
 	const appearancePoint = Math.random() * window.innerWidth
 	nft.style.left = `${appearancePoint}px`
 	const app = document.getElementById('app')
 	const nftName = document.createElement('span')
+	nftName.style.fontSize = `${size/5}vmax`
 	nftName.innerHTML = name ? name : ''
 	nft.appendChild(nftName)
 	app.appendChild(nft)
 	setTimeout(() => {
 		app.removeChild(nft)
-	}, 5000)
+	}, animationTime*1000)
 }
 
 async function nft(payload) {
