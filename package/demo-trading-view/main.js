@@ -14,10 +14,13 @@ const client = createClient({
 
 const maxSize = 20
 
-const addNft = (url, name) => {
+const addNft = async (url, name) => {
 	const nft = document.createElement('div')
 	nft.classList.add('nft')
-	nft.style.backgroundImage = `url(${url})`
+	const response = await fetch(url)
+	const imageBlob = await response.blob()
+	const imageObjectURL = URL.createObjectURL(imageBlob)
+	nft.style.backgroundImage = `url(${imageObjectURL})`
 	const size = Math.random() * maxSize/2 + maxSize/2
 	nft.style.height = `${size}vmax`
 	nft.style.width = `${size}vmax`
