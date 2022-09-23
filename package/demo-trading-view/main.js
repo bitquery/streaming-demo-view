@@ -96,6 +96,9 @@ async function execute(payload) {
 						priceNode.innerHTML = price.toFixed(5)
 						priceNode.classList.remove('green', 'red')
 						priceNode.classList.add(color)
+						if (tradesNode.children.length > 20) {
+							tradesNode.removeChild(tradesNode.children.item(0))
+						}
 					}, i * 2500 / result.buy.length)
 				})
 				result.sell.forEach((trade, i, arr) => {
@@ -125,6 +128,9 @@ async function execute(payload) {
 						priceNode.innerHTML = price.toFixed(5)
 						priceNode.classList.remove('green', 'red')
 						priceNode.classList.add(color)
+						if (tradesNode.children.length > 20) {
+							tradesNode.removeChild(tradesNode.children.item(0))
+						}
 					}, i * 2500 / result.sell.length)
 				})
 			},
