@@ -16,7 +16,7 @@ const maxSize = 10
 const minTime = 7
 
 
-const addNft = async (url, name) => {
+const addNft = async (url, name, id) => {
     const nft = document.createElement('div')
     nft.classList.add('nft')
     if (url != null) {
@@ -25,9 +25,6 @@ const addNft = async (url, name) => {
         const imageObjectURL = URL.createObjectURL(imageBlob)
         nft.style.backgroundImage = `url(${imageObjectURL})`
     } else {
-        // const response = await fetch(defaultImage)
-        // const imageBlob = await response.blob()
-        // const imageObjectURL = URL.createObjectURL(imageBlob)
         nft.style.backgroundImage = `url(${defaultImage})`
     }
     const coeff = Math.floor(Math.random() * (100 - 50 + 1) + 50) / 100
@@ -45,8 +42,10 @@ const addNft = async (url, name) => {
     nft.style.zIndex = parseInt(100 * coeff)
     const app = document.getElementById('app')
     const nftName = document.createElement('span')
-    nftName.style.fontSize = `${size / 5}vmax`
-    nftName.innerHTML = name ? name : ''
+    nftName.style.width = `calc(${size}vmax)px`
+    nftName.style.fontSize = `${size / 6}vmax`
+    const readableId = id.length > 8 ? `${id.substring(0, 8)}...` : id
+    nftName.innerHTML = name ? `${name} #${readableId}` : ''
     nft.appendChild(nftName)
     app.appendChild(nft)
     setTimeout(() => {
@@ -60,20 +59,21 @@ async function nft(payload) {
         client.subscribe(payload, {
             next: async (data) => {
                 const transfers = data.data.EVM.Transfers
-                transfers.forEach(async ({Transfer: {URI, name}}) => {
+                transfers.forEach(async ({Transfer: {URI, Id, Currency: { Name }} }) => {
                     try {
                         if (URI && URI.match(/data:image/gm)) {
-                            addNft(URI, name)
+                            addNft(URI, Name, Id)
                         } else if (!URI.match(/^ipfs:\/\//gm)) {
                             const data = await fetch(URI)
                             const json = await data.json()
+                            console.log(json)
                             if (json.image) {
-                                addNft(json.image, json.name)
+                                addNft(json.image, json.name, Id)
                             }
 
                         }
                     } catch (error) {
-                        addNft(null, '')
+                        addNft(null, Name, Id)
                     }
                 })
             },
@@ -238,6 +238,7 @@ async function execute(payload) {
 			  	Transfers(Transfer: {Currency: {HasURI: true}}) {
 			     Transfer {
 			       Receiver
+             Id
 			       Currency {
 			         Name
 			       }
