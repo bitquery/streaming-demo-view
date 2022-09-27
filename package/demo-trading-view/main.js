@@ -36,7 +36,6 @@ const addNft = async (url, name, id) => {
     nft.style.animationTimingFunction = 'linear'
     nft.style.animationIterationCount = 1
     nft.style.animationDuration = `${parseInt(animationTime * 1000)}ms`
-    console.log(nft.style.animation)
     const appearancePoint = Math.random() * (window.innerWidth - (0.1 * window.innerHeight))
     nft.style.left = `${appearancePoint}px`
     nft.style.zIndex = parseInt(100 * coeff)
@@ -66,7 +65,6 @@ async function nft(payload) {
                         } else if (!URI.match(/^ipfs:\/\//gm)) {
                             const data = await fetch(URI)
                             const json = await data.json()
-                            console.log(json)
                             if (json.image) {
                                 addNft(json.image, json.name, Id)
                             }
