@@ -109,8 +109,8 @@ async function domagic() {
 		baseAddress = curr[0]
 		quoteAddress = curr[1]
 	} else {
-		baseAddress = CURRENCIES.WETH
-		quoteAddress = CURRENCIES.USDC
+		baseAddress = CURRENCIES.WBNB
+		quoteAddress = CURRENCIES.BUSD
 	}
 	document.getElementById('basecurrency').appendChild(document.createTextNode(baseAddress))
 	document.getElementById('quotecurrency').appendChild(document.createTextNode(quoteAddress))
