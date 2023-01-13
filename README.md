@@ -60,10 +60,9 @@ const payload = {
 
 ## Subscriptions
 
-Currently we are limited to the following subsciptions:
-
-1. DEX trades in mainnet ethereum network for Uniswap v2 protocol
-2. Blocks in Ethereum mainnet
+Currently we are limited to the DEX trades and transfers in:
+1. Mainnet ethereum network for Uniswap v2 protocol
+2. BSC network
 
 All other available GraphQL data types will be available later.
 
